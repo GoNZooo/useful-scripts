@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+STACK_EXECUTABLE="$HOME/.local/bin/stack"
+
+# Check for `nix-shell` in the PATH.
+NIX_SHELL_IN_PATH=$(which nix-shell)
+# Check for `default.nix` in the current directory
+DEFAULT_NIX_IN_CURRENT_DIR=$(ls default.nix 2> /dev/null)
+
+# If we have `nix-shell` and `default.nix`, then we can use `--nix` in our stack commands.
+if [[ -n "$NIX_SHELL_IN_PATH" ]] && [[ -n "$DEFAULT_NIX_IN_CURRENT_DIR" ]]; then
+  # Run the stack command with `--nix`.
+  $STACK_EXECUTABLE --nix "$@"
+else
+  # Otherwise, run the stack command without `--nix`.
+  $STACK_EXECUTABLE "$@"
+fi
